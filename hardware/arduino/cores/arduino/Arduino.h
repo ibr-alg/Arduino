@@ -3,7 +3,10 @@
 
 #include <stdlib.h>
 #include <string.h>
+
+#ifdef ARDUINO_MATH
 #include <math.h>
+#endif
 
 #include <avr/pgmspace.h>
 #include <avr/io.h>
@@ -45,8 +48,8 @@ extern "C"{
 #define DEFAULT 0
 #define EXTERNAL 1
 #define INTERNAL 2
-#else  
-#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__) || defined(__AVR_ATmega1284P__) 
+#else
+#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__) || defined(__AVR_ATmega1284P__)
 #define INTERNAL1V1 2
 #define INTERNAL2V56 3
 #else
@@ -95,21 +98,29 @@ typedef uint8_t byte;
 
 void init(void);
 
+#ifdef ARDUINO_WIRING_DIGITAL
 void pinMode(uint8_t, uint8_t);
 void digitalWrite(uint8_t, uint8_t);
 int digitalRead(uint8_t);
+#endif
+#ifdef ARDUINO_WIRING_ANALOG
 int analogRead(uint8_t);
 void analogReference(uint8_t mode);
 void analogWrite(uint8_t, int);
+#endif
 
 unsigned long millis(void);
 unsigned long micros(void);
 void delay(unsigned long);
 void delayMicroseconds(unsigned int us);
+#ifdef ARDUINO_WIRING_PULSE
 unsigned long pulseIn(uint8_t pin, uint8_t state, unsigned long timeout);
+#endif
 
+#ifdef ARDUINO_WIRING_SHIFT
 void shiftOut(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder, uint8_t val);
 uint8_t shiftIn(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder);
+#endif
 
 void attachInterrupt(uint8_t, void (*)(void), int mode);
 void detachInterrupt(uint8_t);
@@ -135,7 +146,7 @@ extern const uint8_t PROGMEM digital_pin_to_timer_PGM[];
 
 // Get the bit location within the hardware port of the given virtual pin.
 // This comes from the pins_*.c file for the active board configuration.
-// 
+//
 // These perform slightly better as macros compared to inline functions
 //
 #define digitalPinToPort(P) ( pgm_read_byte( digital_pin_to_port_PGM + (P) ) )
@@ -178,7 +189,7 @@ extern const uint8_t PROGMEM digital_pin_to_timer_PGM[];
 #define TIMER4A 11
 #define TIMER4B 12
 #define TIMER4C 13
-#define TIMER4D 14	
+#define TIMER4D 14
 #define TIMER5A 15
 #define TIMER5B 16
 #define TIMER5C 17
@@ -188,25 +199,39 @@ extern const uint8_t PROGMEM digital_pin_to_timer_PGM[];
 #endif
 
 #ifdef __cplusplus
+#ifdef ARDUINO_WCHARACTER
 #include "WCharacter.h"
+#endif
+
+#ifdef ARDUINO_STRING
 #include "WString.h"
+#endif
+
 #include "HardwareSerial.h"
 
+#ifdef ARDUINO_MATH
 uint16_t makeWord(uint16_t w);
 uint16_t makeWord(byte h, byte l);
 
 #define word(...) makeWord(__VA_ARGS__)
+#endif
 
+#ifdef ARDUINO_WIRING_PULSE
 unsigned long pulseIn(uint8_t pin, uint8_t state, unsigned long timeout = 1000000L);
+#endif
 
+#ifdef ARDUINO_TONE
 void tone(uint8_t _pin, unsigned int frequency, unsigned long duration = 0);
 void noTone(uint8_t _pin);
+#endif
 
+#ifdef ARDUINO_MATH
 // WMath prototypes
 long random(long);
 long random(long, long);
 void randomSeed(unsigned int);
 long map(long, long, long, long, long);
+#endif
 
 #endif
 

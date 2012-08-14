@@ -1,7 +1,7 @@
 /*
  *  Udp.cpp: Library to send/receive UDP packets with the Arduino ethernet shield.
  *  This version only offers minimal wrapping of socket.c/socket.h
- *  Drop Udp.h/.cpp into the Ethernet library directory at hardware/libraries/Ethernet/ 
+ *  Drop Udp.h/.cpp into the Ethernet library directory at hardware/libraries/Ethernet/
  *
  * MIT License:
  * Copyright (c) 2008 Bjoern Hartmann
@@ -11,10 +11,10 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -30,7 +30,12 @@
 #include "socket.h"
 #include "Ethernet.h"
 #include "Udp.h"
+#ifdef ARDUINO_DNS
 #include "Dns.h"
+#endif
+#ifdef ARDUINO_LITE
+#include "EthernetUdp.h"
+#endif
 
 /* Constructor */
 EthernetUDP::EthernetUDP() : _sock(MAX_SOCK_NUM) {}
@@ -76,6 +81,7 @@ void EthernetUDP::stop()
   _sock = MAX_SOCK_NUM;
 }
 
+#ifdef ARDUINO_DNS
 int EthernetUDP::beginPacket(const char *host, uint16_t port)
 {
   // Look up the host first
@@ -91,6 +97,7 @@ int EthernetUDP::beginPacket(const char *host, uint16_t port)
     return ret;
   }
 }
+#endif
 
 int EthernetUDP::beginPacket(IPAddress ip, uint16_t port)
 {
@@ -124,7 +131,7 @@ int EthernetUDP::parsePacket()
   {
     //HACK - hand-parse the UDP packet using TCP recv method
     uint8_t tmpBuf[8];
-    int ret =0; 
+    int ret =0;
     //read 8 header bytes and get IP and port from it
     ret = recv(_sock,tmpBuf,8);
     if (ret > 0)
@@ -174,7 +181,7 @@ int EthernetUDP::read(unsigned char* buffer, size_t len)
     }
     else
     {
-      // too much data for the buffer, 
+      // too much data for the buffer,
       // grab as much as will fit
       got = recv(_sock, buffer, len);
     }

@@ -1,13 +1,16 @@
 #include "w5100.h"
 #include "Ethernet.h"
+#ifdef ARDUINO_DHCP
 #include "Dhcp.h"
+#endif
 
 // XXX: don't make assumptions about the value of MAX_SOCK_NUM.
-uint8_t EthernetClass::_state[MAX_SOCK_NUM] = { 
+uint8_t EthernetClass::_state[MAX_SOCK_NUM] = {
   0, 0, 0, 0 };
-uint16_t EthernetClass::_server_port[MAX_SOCK_NUM] = { 
+uint16_t EthernetClass::_server_port[MAX_SOCK_NUM] = {
   0, 0, 0, 0 };
 
+#ifdef ARDUINO_DHCP
 int EthernetClass::begin(uint8_t *mac_address)
 {
   _dhcp = new DhcpClass();
@@ -32,7 +35,9 @@ int EthernetClass::begin(uint8_t *mac_address)
 
   return ret;
 }
+#endif
 
+#ifndef ARDUINO_LITE
 void EthernetClass::begin(uint8_t *mac_address, IPAddress local_ip)
 {
   // Assume the DNS server will be the machine on the same network as the local IP
@@ -56,6 +61,7 @@ void EthernetClass::begin(uint8_t *mac_address, IPAddress local_ip, IPAddress dn
   IPAddress subnet(255, 255, 255, 0);
   begin(mac_address, local_ip, dns_server, gateway, subnet);
 }
+#endif
 
 void EthernetClass::begin(uint8_t *mac, IPAddress local_ip, IPAddress dns_server, IPAddress gateway, IPAddress subnet)
 {
@@ -67,6 +73,7 @@ void EthernetClass::begin(uint8_t *mac, IPAddress local_ip, IPAddress dns_server
   _dnsServerAddress = dns_server;
 }
 
+#ifndef ARDUINO_LITE
 int EthernetClass::maintain(){
   int rc = DHCP_CHECK_NONE;
   if(_dhcp != NULL){
@@ -91,6 +98,7 @@ int EthernetClass::maintain(){
   }
   return rc;
 }
+#endif
 
 IPAddress EthernetClass::localIP()
 {
