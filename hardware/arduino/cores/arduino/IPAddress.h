@@ -60,14 +60,17 @@ public:
     IPAddress& operator=(const uint8_t *address);
     IPAddress& operator=(uint32_t address);
 
+#ifndef ARDUINO_LITE
     virtual size_t printTo(Print& p) const;
-
+#endif
     friend class EthernetClass;
     friend class UDP;
+#ifndef ARDUINO_LITE
     friend class Client;
     friend class Server;
     friend class DhcpClass;
     friend class DNSClient;
+#endif
 };
 
 const IPAddress INADDR_NONE(0,0,0,0);

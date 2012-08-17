@@ -32,8 +32,10 @@ class Print;
 
 class Printable
 {
+#ifndef ARDUINO_LITE
   public:
     virtual size_t printTo(Print& p) const = 0;
+#endif
 };
 
 #endif

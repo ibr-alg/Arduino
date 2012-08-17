@@ -42,6 +42,7 @@ bool IPAddress::operator==(const uint8_t* addr)
     return memcmp(addr, _address, sizeof(_address)) == 0;
 }
 
+#ifndef ARDUINO_LITE
 size_t IPAddress::printTo(Print& p) const
 {
     size_t n = 0;
@@ -53,4 +54,4 @@ size_t IPAddress::printTo(Print& p) const
     n += p.print(_address[3], DEC);
     return n;
 }
-
+#endif
