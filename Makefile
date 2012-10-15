@@ -1,8 +1,8 @@
 CC=avr-gcc
 CXX=avr-g++
-MCU=-mmcu=atmega328p
-CPU_SPEED=-DF_CPU=16000000UL
-VARIANTS=standard
+#MCU=-mmcu=atmega328p
+#CPU_SPEED=-DF_CPU=16000000UL
+#VARIANTS=standard
 
 SPI_PATH=libraries/SPI
 PINS_PATH=hardware/arduino/variants/$(VARIANTS)
@@ -15,8 +15,8 @@ HEADER_PATHS=-I$(SPI_PATH) -I$(PINS_PATH) -I$(WIRING_PATH) -I$(ETHERNET_PATH) \
 	-I$(ETHERNET_PATH)/utility
 ENABLE_FLAGS=-DARDUINO_WIRING_DIGITAL -DARDUINO_LITE
 
-CFLAGS=$(MCU) $(CPU_SPEED) $(ENABLE_FLAGS) -Os -w -funsigned-char \
-	-funsigned-bitfields -fpack-struct -fshort-enums
+CFLAGS=-mmcu=$(MCU) -DF_CPU=$(CPU_SPEED) $(ENABLE_FLAGS) -Os -w -funsigned-char \
+	-funsigned-bitfields -fpack-struct -fshort-enums -fno-exceptions
 
 ARDUINO_FILES=wiring.c wiring_digital.c HardwareSerial.cpp \
 	WInterrupts.c Print.cpp IPAddress.cpp new.cpp
@@ -31,9 +31,16 @@ ARDUINO_OBJECTS1=$(filter %.cpp, $(ARDUINO_SOURCES))
 ARDUINO_OBJECTS2=$(filter %.c, $(ARDUINO_SOURCES))
 ARDUINO_OBJECTS=$(ARDUINO_OBJECTS1:.cpp=.o) $(ARDUINO_OBJECTS2:.c=.o)
 
+.phony: clean default
+
 default: $(STATIC_LIBRARIES)
+	
+clean:
+	echo ------------- CLEAN
+	rm -f libarduino.a libspi.a libethernet.a
 
 libarduino.a: $(ARDUINO_OBJECTS)
+	echo ------------- LIBARDUINO
 	avr-ar rcs $@ $^
 	rm $(ARDUINO_OBJECTS)
 
