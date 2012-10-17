@@ -5,14 +5,15 @@ CXX=avr-g++
 #VARIANTS=standard
 
 SPI_PATH=libraries/SPI
+SD_PATH=libraries/SD
 PINS_PATH=hardware/arduino/variants/$(VARIANTS)
 WIRING_PATH=hardware/arduino/cores/arduino
 ETHERNET_PATH=libraries/Ethernet
 
-STATIC_LIBRARIES=libarduino.a libspi.a libethernet.a
+STATIC_LIBRARIES=libarduino.a libspi.a libethernet.a libsd.a librawsd.a
 
 HEADER_PATHS=-I$(SPI_PATH) -I$(PINS_PATH) -I$(WIRING_PATH) -I$(ETHERNET_PATH) \
-	-I$(ETHERNET_PATH)/utility
+	-I$(ETHERNET_PATH)/utility -I$(SD_PATH) -I$(SD_PATH)/utility
 ENABLE_FLAGS=-DARDUINO_WIRING_DIGITAL -DARDUINO_LITE
 
 CFLAGS=-mmcu=$(MCU) -DF_CPU=$(CPU_SPEED) $(ENABLE_FLAGS) -Os -w -funsigned-char \
@@ -37,7 +38,7 @@ default: $(STATIC_LIBRARIES)
 	
 clean:
 	echo ------------- CLEAN
-	rm -f libarduino.a libspi.a libethernet.a
+	rm -f libarduino.a libspi.a libethernet.a libsd.a librawsd.a
 
 libarduino.a: $(ARDUINO_OBJECTS)
 	echo ------------- LIBARDUINO
@@ -48,6 +49,18 @@ libspi.a: $(SPI_PATH)/SPI.cpp
 	$(CXX) $(HEADER_PATHS) $< $(CFLAGS) -c -o $(SPI_PATH)/SPI.o
 	avr-ar rcs $@ $(SPI_PATH)/SPI.o
 	rm $(SPI_PATH)/SPI.o
+	
+libsd.a: $(SD_PATH)/SD.cpp librawsd.a
+	@echo --------------------- LIB SD
+	$(CXX) $(HEADER_PATHS) $< $(CFLAGS) -c -o $(SD_PATH)/SD.o
+	avr-ar rcs $@ $(SD_PATH)/SD.o
+	rm $(SD_PATH)/SD.o
+	
+librawsd.a: $(SD_PATH)/utility/Sd2Card.cpp
+	@echo --------------------- LIBRAWSD
+	$(CXX) $(HEADER_PATHS) $< $(CFLAGS) -c -o $(SD_PATH)/utility/SD2Card.o
+	avr-ar rcs $@ $(SD_PATH)/utility/SD2Card.o
+	rm $(SD_PATH)/utility/SD2Card.o
 
 libethernet.a: $(ETHERNET_OBJECTS)
 	avr-ar rcs $@ $^
