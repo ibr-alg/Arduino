@@ -18,7 +18,7 @@ HEADER_PATHS=-I$(SPI_PATH) -I$(PINS_PATH) -I$(WIRING_PATH) -I$(ETHERNET_PATH) \
 ENABLE_FLAGS=-DARDUINO_WIRING_DIGITAL -DARDUINO_LITE
 
 CFLAGS=$(MCU) $(CPU_SPEED) $(ENABLE_FLAGS) -Os -w -funsigned-char \
-	-funsigned-bitfields -fpack-struct -fshort-enums
+	-funsigned-bitfields -fpack-struct -fshort-enums -fno-exceptions
 
 STRING_CFLAGS=$(MCU) $(CPU_SPEED) -DARDUINO_WIRING_DIGITAL -DARDUINO_STRING -Os -w -funsigned-char \
 	-funsigned-bitfields -fpack-struct -fshort-enums
@@ -50,7 +50,7 @@ clean:
 
 libarduino.a: $(ARDUINO_OBJECTS)	
 	echo ------------- LIBARDUINO
-	avr-ar rcs $@ $(ARDUINO_OBJECTS)
+	avr-ar rcs $@ $^
 	rm $(ARDUINO_OBJECTS)
 
 libspi.a: $(SPI_PATH)/SPI.cpp
