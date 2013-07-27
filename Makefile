@@ -10,9 +10,7 @@ PINS_PATH=hardware/arduino/variants/$(VARIANTS)
 WIRING_PATH=hardware/arduino/cores/arduino
 ETHERNET_PATH=libraries/Ethernet
 SOFTWARE_SERIAL_PATH=libraries/SoftwareSerial
-######
-MSTIMER2_PATH=libraries/MsTimer2
-######
+
 XBEE_PATH=libraries/XBee
 
 STATIC_LIBRARIES=libarduino.a libspi.a libethernet.a libsd.a librawsd.a libsoftwareserial.a libstring.a libxbee.a
