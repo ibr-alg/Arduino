@@ -11,10 +11,14 @@ WIRING_PATH=hardware/arduino/cores/arduino
 ETHERNET_PATH=libraries/Ethernet
 SOFTWARE_SERIAL_PATH=libraries/SoftwareSerial
 
-STATIC_LIBRARIES=libarduino.a libspi.a libethernet.a libsd.a librawsd.a libsoftwareserial.a libstring.a
+XBEE_PATH=libraries/XBee
+
+STATIC_LIBRARIES=libarduino.a libspi.a libethernet.a libsd.a librawsd.a libsoftwareserial.a libstring.a libxbee.a
 
 HEADER_PATHS=-I$(SPI_PATH) -I$(PINS_PATH) -I$(WIRING_PATH) -I$(ETHERNET_PATH) \
-	-I$(ETHERNET_PATH)/utility -I$(SD_PATH) -I$(SD_PATH)/utility -I$(SOFTWARE_SERIAL_PATH)
+	-I$(ETHERNET_PATH)/utility -I$(SD_PATH) -I$(SD_PATH)/utility \
+	-I$(SOFTWARE_SERIAL_PATH) -I$(XBEE_PATH)
+
 ENABLE_FLAGS=-DARDUINO_WIRING_DIGITAL -DARDUINO_LITE
 
 CFLAGS=$(MCU) $(CPU_SPEED) $(ENABLE_FLAGS) -Os -w -funsigned-char \
@@ -46,7 +50,7 @@ default: $(STATIC_LIBRARIES)
 
 clean:
 	echo ------------- CLEAN
-	rm -f libarduino.a libspi.a libethernet.a libsd.a librawsd.a libsoftwareserial.a libstring.a
+	rm -f libarduino.a libspi.a libethernet.a libsd.a librawsd.a libsoftwareserial.a libstring.a libxbee.a
 
 libarduino.a: $(ARDUINO_OBJECTS)	
 	echo ------------- LIBARDUINO
@@ -82,6 +86,12 @@ libethernet.a: $(ETHERNET_OBJECTS)
 libsoftwareserial.a: $(SOFTWARE_SERIAL_PATH)/SoftwareSerial.cpp
 	$(CXX) $(HEADER_PATHS) $< $(CFLAGS) -c -o $(SOFTWARE_SERIAL_PATH)/SoftwareSerial.o
 	avr-ar rcs $@ $(SOFTWARE_SERIAL_PATH)/SoftwareSerial.o
+	rm $(SOFTWARE_SERIAL_PATH)/SoftwareSerial.o
+
+libxbee.a: $(XBEE_PATH)/XBee.cpp
+	$(CXX) $(HEADER_PATHS) $< $(CFLAGS) -c -o $(XBEE_PATH)/XBee.o
+	avr-ar rcs $@ $(XBEE_PATH)/XBee.o
+	rm $(XBEE_PATH)/XBee.o
 
 $(ETHERNET_PATH)/%.o : $(ETHERNET_PATH)/%.cpp
 	$(CXX) $(HEADER_PATHS) $< $(CFLAGS) -c -o $@	
