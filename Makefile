@@ -1,8 +1,8 @@
 CC=avr-gcc
 CXX=avr-g++
-MCU=-mmcu=atmega328p
-CPU_SPEED=-DF_CPU=16000000UL
-VARIANTS=standard
+MCU ?= atmega328p
+CPU_SPEED ?= 16000000UL
+VARIANTS ?= standard
 
 SPI_PATH=libraries/SPI
 SD_PATH=libraries/SD
@@ -21,10 +21,10 @@ HEADER_PATHS=-I$(SPI_PATH) -I$(PINS_PATH) -I$(WIRING_PATH) -I$(ETHERNET_PATH) \
 
 ENABLE_FLAGS=-DARDUINO_WIRING_DIGITAL -DARDUINO_LITE
 
-CFLAGS=$(MCU) $(CPU_SPEED) $(ENABLE_FLAGS) -Os -w -funsigned-char \
+CFLAGS=-mmcu=$(MCU) -DF_CPU=$(CPU_SPEED) $(ENABLE_FLAGS) -Os -w -funsigned-char \
 	-funsigned-bitfields -fpack-struct -fshort-enums -fno-exceptions
 
-STRING_CFLAGS=$(MCU) $(CPU_SPEED) -DARDUINO_WIRING_DIGITAL -DARDUINO_STRING -Os -w -funsigned-char \
+STRING_CFLAGS=-mmcu=$(MCU) -DF_CPU=$(CPU_SPEED) -DARDUINO_WIRING_DIGITAL -DARDUINO_STRING -Os -w -funsigned-char \
 	-funsigned-bitfields -fpack-struct -fshort-enums
 
 ARDUINO_FILES=wiring.c wiring_digital.c HardwareSerial.cpp \
