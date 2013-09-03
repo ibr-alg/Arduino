@@ -57,15 +57,12 @@ class Print
     }
     virtual size_t write(const uint8_t *buffer, size_t size);
 
-#ifndef ARDUINO_LITE
 #ifdef ARDUINO_STRING
     size_t print(const __FlashStringHelper *);
     size_t print(const String &);
 #endif
-#endif
     size_t print(const char[]);
     size_t print(char);
-#ifdef ARDUINO_LITE
     size_t print(unsigned char, int = DEC);
     size_t print(int, int = DEC);
     size_t print(unsigned int, int = DEC);
@@ -80,10 +77,8 @@ class Print
     size_t println(const __FlashStringHelper *);
     size_t println(const String &s);
 #endif
-#endif
     size_t println(const char[]);
     size_t println(char);
-#ifndef ARDUINO_LITE
     size_t println(unsigned char, int = DEC);
     size_t println(int, int = DEC);
     size_t println(unsigned int, int = DEC);
@@ -93,7 +88,6 @@ class Print
     size_t println(double, int = 2);
 #endif
     size_t println(const Printable&);
-#endif
     size_t println(void);
 };
 

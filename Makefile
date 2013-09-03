@@ -13,21 +13,21 @@ SOFTWARE_SERIAL_PATH=libraries/SoftwareSerial
 
 XBEE_PATH=libraries/XBee
 
-STATIC_LIBRARIES=libarduino.a libspi.a libethernet.a libsd.a librawsd.a libsoftwareserial.a libstring.a libxbee.a
+STATIC_LIBRARIES=libarduino.a libspi.a libethernet.a libsd.a librawsd.a libsoftwareserial.a libstring.a libxbee.a 
 
 HEADER_PATHS=-I$(SPI_PATH) -I$(PINS_PATH) -I$(WIRING_PATH) -I$(ETHERNET_PATH) \
 	-I$(ETHERNET_PATH)/utility -I$(SD_PATH) -I$(SD_PATH)/utility \
 	-I$(SOFTWARE_SERIAL_PATH) -I$(XBEE_PATH)
 
-ENABLE_FLAGS=-DARDUINO_WIRING_DIGITAL -DARDUINO_LITE
+ENABLE_FLAGS=-DARDUINO_WIRING_DIGITAL -DARDUINO_WIRING_ANALOG -DARDUINO_LITE -DARDUINO_MATH
 
 CFLAGS=-mmcu=$(MCU) -DF_CPU=$(CPU_SPEED) $(ENABLE_FLAGS) -Os -w -funsigned-char \
 	-funsigned-bitfields -fpack-struct -fshort-enums -fno-exceptions
 
-STRING_CFLAGS=-mmcu=$(MCU) -DF_CPU=$(CPU_SPEED) -DARDUINO_WIRING_DIGITAL -DARDUINO_STRING -Os -w -funsigned-char \
+STRING_CFLAGS=-mmcu=$(MCU) -DF_CPU=$(CPU_SPEED) -DARDUINO_MATH -DARDUINO_WIRING_DIGITAL -DARDUINO_WIRING_ANALOG -DARDUINO_STRING -Os -w -funsigned-char \
 	-funsigned-bitfields -fpack-struct -fshort-enums
 
-ARDUINO_FILES=wiring.c wiring_digital.c HardwareSerial.cpp \
+ARDUINO_FILES=wiring.c wiring_digital.c wiring_analog.c HardwareSerial.cpp \
 	WInterrupts.c Print.cpp IPAddress.cpp new.cpp
 
 ETHERNET_FILES=Ethernet.cpp EthernetUdp.cpp utility/socket.cpp \
@@ -87,7 +87,7 @@ libsoftwareserial.a: $(SOFTWARE_SERIAL_PATH)/SoftwareSerial.cpp
 	$(CXX) $(HEADER_PATHS) $< $(CFLAGS) -c -o $(SOFTWARE_SERIAL_PATH)/SoftwareSerial.o
 	avr-ar rcs $@ $(SOFTWARE_SERIAL_PATH)/SoftwareSerial.o
 	rm $(SOFTWARE_SERIAL_PATH)/SoftwareSerial.o
-
+	
 libxbee.a: $(XBEE_PATH)/XBee.cpp
 	$(CXX) $(HEADER_PATHS) $< $(CFLAGS) -c -o $(XBEE_PATH)/XBee.o
 	avr-ar rcs $@ $(XBEE_PATH)/XBee.o

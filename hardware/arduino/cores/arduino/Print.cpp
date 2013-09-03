@@ -41,7 +41,6 @@ size_t Print::write(const uint8_t *buffer, size_t size)
   return n;
 }
 
-#ifndef ARDUINO_LITE
 #ifdef ARDUINO_STRING
 size_t Print::print(const __FlashStringHelper *ifsh)
 {
@@ -64,7 +63,6 @@ size_t Print::print(const String &s)
   return n;
 }
 #endif
-#endif
 
 size_t Print::print(const char str[])
 {
@@ -76,7 +74,6 @@ size_t Print::print(char c)
   return write(c);
 }
 
-#ifndef ARDUINO_LITE
 size_t Print::print(unsigned char b, int base)
 {
   return print((unsigned long) b, base);
@@ -130,6 +127,7 @@ size_t Print::println(const __FlashStringHelper *ifsh)
 }
 #endif
 
+#ifndef ARDUINO_LITE
 size_t Print::print(const Printable& x)
 {
   return x.printTo(*this);
@@ -166,7 +164,6 @@ size_t Print::println(char c)
   return n;
 }
 
-#ifndef ARDUINO_LITE
 size_t Print::println(unsigned char b, int base)
 {
   size_t n = print(b, base);
@@ -211,12 +208,14 @@ size_t Print::println(double num, int digits)
 }
 #endif
 
+#ifndef ARDUINO_LITE
 size_t Print::println(const Printable& x)
 {
   size_t n = print(x);
   n += println();
   return n;
 }
+#endif
 
 // Private Methods /////////////////////////////////////////////////////////////
 
@@ -284,6 +283,5 @@ size_t Print::printFloat(double number, uint8_t digits)
 
   return n;
 }
-#endif
 #endif
 

@@ -23,7 +23,7 @@
 //#if defined(ARDUINO) && ARDUINO >= 100
 	#include "Arduino.h"
 //#else
-//	#include "WProgram.h"
+	//#include "WProgram.h"
 //#endif
 
 #include <inttypes.h>
@@ -47,7 +47,7 @@
 // This value is determined by the largest packet size (100 byte payload + 64-bit address + option byte and rssi byte) of a series 1 radio
 #define MAX_FRAME_DATA_SIZE 110
 
-#define XBEE_BROADCAST_ADDRESS 0xffff
+#define BROADCAST_ADDRESS 0xffff
 #define ZB_BROADCAST_ADDRESS 0xfffe
 
 // the non-variable length of the frame data (not including frame id or api id or variable data size (e.g. payload, at command set value)
@@ -107,7 +107,7 @@
 /**
  * TX STATUS constants
  */
-#define	XBEE_SUCCESS 0x0
+#define	SUCCESS 0x0
 #define CCA_FAILURE 0x2
 #define INVALID_DESTINATION_ENDPOINT_SUCCESS 0x15
 #define	NETWORK_ACK_FAILURE 0x21
@@ -699,9 +699,9 @@ public:
 	 */
 	void readPacketUntilAvailable();
 	/**
-	 * Starts the serial connection at the supplied baud rate
+	 * Starts the serial connection on the specified serial port
 	 */
-	void begin(long baud);
+	void begin(Stream &serial);
 	void getResponse(XBeeResponse &response);
 	/**
 	 * Returns a reference to the current response
@@ -720,7 +720,7 @@ public:
 	/**
 	 * Specify the serial port.  Only relevant for Arduinos that support multiple serial ports (e.g. Mega)
 	 */
-	void setSerial(HardwareSerial &serial);
+	void setSerial(Stream &serial);
 private:
 	bool available();
 	uint8_t read();
@@ -738,7 +738,7 @@ private:
 	uint8_t _nextFrameId;
 	// buffer for incoming RX packets.  holds only the api specific frame data, starting after the api id byte and prior to checksum
 	uint8_t _responseFrameData[MAX_FRAME_DATA_SIZE];
-	HardwareSerial* _serial;
+	Stream* _serial;
 };
 
 /**
