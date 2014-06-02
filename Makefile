@@ -47,6 +47,19 @@ ARDUINO_OBJECTS=$(ARDUINO_OBJECTS1:.cpp=.o) $(ARDUINO_OBJECTS2:.c=.o)
 .phony: clean default
 
 default: $(STATIC_LIBRARIES)
+	@echo
+	@echo I just compiled with the following settings:
+	@echo MCU=$(MCU)
+	@echo CPU_SPEED=$(CPU_SPEED)
+	@echo If you get 'skipping incompatible libxxx.a...' try fixing thhese values
+	@echo
+	@echo Useful values are:
+	@echo Arduino MEGA2560:  make MCU=atmega2560 CPU_SPEED=16000000L
+	@echo Arduino Uno:       make MCU=atmega328p CPU_SPEED=16000000L
+	@echo
+	@echo For others, see hardware/arduino/boards.txt
+	@echo
+
 
 clean:
 	echo ------------- CLEAN
